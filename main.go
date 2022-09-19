@@ -8,13 +8,12 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"regexp"
-	"sort"
 	"strconv"
 	"strings"
 	"sync"
 
 	"github.com/blevesearch/bleve/v2"
+	"jaytaylor.com/html2text"
 )
 
 type Posting struct {
@@ -62,6 +61,7 @@ func createIndex(index bleve.Index, postingId int64) {
 
 	var wg sync.WaitGroup
 
+	log.Printf("Indexing %d postings", len(posting.Kids))
 	wg.Add(len(posting.Kids))
 
 	for _, item := range posting.Kids {
@@ -70,6 +70,13 @@ func createIndex(index bleve.Index, postingId int64) {
 			if err != nil {
 				log.Fatal(err)
 			}
+
+			text, err := html2text.FromString(html.UnescapeString(job.Text))
+			if err != nil {
+				log.Fatal(err)
+			}
+			job.Text = text
+
 			err = index.Index(strconv.FormatInt(i, 10), job)
 			if err != nil {
 				log.Fatal(err)
@@ -80,24 +87,6 @@ func createIndex(index bleve.Index, postingId int64) {
 
 	wg.Wait()
 	log.Println("Done indexing")
-}
-
-func RemoveHtmlTag(in string) string {
-	const pattern = `(<\/?[a-zA-A]+?[^>]*\/?>)*`
-	r := regexp.MustCompile(pattern)
-	groups := r.FindAllString(in, -1)
-
-	sort.Slice(groups, func(i, j int) bool {
-		return len(groups[i]) > len(groups[j])
-	})
-
-	for _, group := range groups {
-		if strings.TrimSpace(group) != "" {
-			in = strings.ReplaceAll(in, group, "")
-		}
-	}
-
-	return in
 }
 
 func search(jobPostingId int64, queryText string, searchCount int) map[string]string {
@@ -157,10 +146,9 @@ func main() {
 	links := search(jobPostingId, queryText, searchCount)
 
 	fmt.Printf("Found %d postings for %s\n\n", len(links), queryText)
-	fmt.Printf("%-50s %-20s\n", "Link", "Posting Snippet")
-	fmt.Printf("%-50s %-20s\n", strings.Repeat("-", 25), strings.Repeat("-", 25))
+	fmt.Printf("%-50s %-75s\n", "Link", "Posting Snippet")
+	fmt.Printf("%-50s %-75s\n", strings.Repeat("-", 25), strings.Repeat("-", 25))
 	for id, text := range links {
-		posting := RemoveHtmlTag(html.UnescapeString(strings.Replace(text, "\n", " ", -1)))
-		fmt.Printf("%-50s %.75s\n", fmt.Sprintf("https://news.ycombinator.com/item?id=%s", id), posting)
+		fmt.Printf("%-50s %.75s\n", fmt.Sprintf("https://news.ycombinator.com/item?id=%s", id), strings.Split(text, "\n")[0])
 	}
 }
