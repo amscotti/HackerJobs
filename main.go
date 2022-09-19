@@ -97,8 +97,12 @@ func search(jobPostingId int64, queryText string, searchCount int) map[string]st
 		enFieldMapping := bleve.NewTextFieldMapping()
 		enFieldMapping.Analyzer = "en"
 
+		byFieldMapping := bleve.NewTextFieldMapping()
+		byFieldMapping.Analyzer = "keyword"
+
 		postingMapping := bleve.NewDocumentMapping()
 		postingMapping.AddFieldMappingsAt("text", enFieldMapping)
+		postingMapping.AddFieldMappingsAt("by", byFieldMapping)
 
 		indexMapping := bleve.NewIndexMapping()
 		indexMapping.DefaultMapping = postingMapping
