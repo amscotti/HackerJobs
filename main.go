@@ -117,7 +117,7 @@ func search(jobPostingId int64, queryText string, searchCount int) map[string]st
 		log.Printf("Opening existing index...")
 	}
 
-	query := bleve.NewMatchQuery(queryText)
+	query := bleve.NewQueryStringQuery(queryText)
 	searchRequest := bleve.NewSearchRequest(query)
 	searchRequest.Fields = []string{"text"}
 	searchRequest.Size = searchCount
