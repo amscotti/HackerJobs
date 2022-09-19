@@ -105,7 +105,15 @@ func search(jobPostingId int64, queryText string, searchCount int) map[string]st
 	index, err := bleve.Open(indexPath)
 	if err == bleve.ErrorIndexPathDoesNotExist {
 		log.Printf("Creating new index...")
+		enFieldMapping := bleve.NewTextFieldMapping()
+		enFieldMapping.Analyzer = "en"
+
+		postingMapping := bleve.NewDocumentMapping()
+		postingMapping.AddFieldMappingsAt("text", enFieldMapping)
+
 		indexMapping := bleve.NewIndexMapping()
+		indexMapping.DefaultMapping = postingMapping
+
 		index, err = bleve.New(indexPath, indexMapping)
 		if err != nil {
 			log.Fatal(err)
@@ -142,7 +150,7 @@ func main() {
 	)
 
 	flag.Int64Var(&jobPostingId, "j", 32677265, "Job posting ID from HackerNews")
-	flag.StringVar(&queryText, "q", "golang", "Text to search for in postings")
+	flag.StringVar(&queryText, "q", "+text:golang +text:remote", "Text to search for in postings")
 	flag.IntVar(&searchCount, "c", 100, "Count of posting to be return")
 	flag.Parse()
 

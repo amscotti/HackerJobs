@@ -14,8 +14,8 @@ A command line tool index job postings from [Hacker News](https://news.ycombinat
 * Build with `docker build -t hacker_jobs . `
 * Then run with `docker run hacker_jobs`
 
-### With pre-build Docker image from [ghcr.io](https://github.com/amscotti/HackerJobs/pkgs/container/hacker_jobs)
-* To download and run, use `docker run ghcr.io/amscotti/hacker_jobs:main`
+### With pre-build Docker image from [ghcr.io](https://github.com/amscotti/HackerJobs/pkgs/container/hackerjobs)
+* To download and run, use `docker run ghcr.io/amscotti/hackerjobs:main`
 
 ### Command Line Arguments
 ```
@@ -25,5 +25,5 @@ Usage of ./HackerJobs:
   -j int
         Job posting ID from HackerNews (default 32677265)
   -q string
-        Text to search for in postings (default "golang")
+        Text to search for in postings (default "+text:golang +text:remote")
 ```
