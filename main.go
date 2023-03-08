@@ -142,7 +142,7 @@ func main() {
 		searchCount  int
 	)
 
-	flag.Int64Var(&jobPostingId, "j", 33422129, "Job posting ID from HackerNews")
+	flag.Int64Var(&jobPostingId, "j", 34983767, "Job posting ID from HackerNews")
 	flag.StringVar(&queryText, "q", "+text:golang +text:remote", "Text to search for in postings")
 	flag.IntVar(&searchCount, "c", 100, "Count of posting to be return")
 	flag.Parse()
