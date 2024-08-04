@@ -2,7 +2,7 @@
 A command line tool index job postings from [Hacker News](https://news.ycombinator.com/) using the [Hacker News API from Firebase](https://github.com/HackerNews/API) and [Bleve](http://blevesearch.com/).
 
 
-![HackerJobs Output](https://github.com/amscotti/HackerJobs/blob/main/HackerJobs.png?raw=true)
+[![asciicast](https://asciinema.org/a/KxpasyadU7dwdAkaYSLrhc0l3.svg)](https://asciinema.org/a/KxpasyadU7dwdAkaYSLrhc0l3)
 
 ## Building and Running
 
